@@ -34,15 +34,26 @@ function clientAnalyzeError(message) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Sync version dynamically from manifest.json
-  try {
-    const manifestVer = chrome.runtime?.getManifest()?.version;
-    if (manifestVer) {
-      document.querySelectorAll('.brand-version').forEach(el => {
-        el.textContent = `v${manifestVer}`;
-      });
-    }
-  } catch (e) {}
+  // Sync version dynamically by fetching manifest.json directly from disk (bypasses Chrome in-memory manifest cache)
+  fetch(chrome.runtime.getURL('manifest.json') + '?t=' + Date.now())
+    .then(r => r.json())
+    .then(m => {
+      if (m && m.version) {
+        document.querySelectorAll('.brand-version').forEach(el => {
+          el.textContent = `v${m.version}`;
+        });
+      }
+    })
+    .catch(() => {
+      try {
+        const manifestVer = chrome.runtime?.getManifest()?.version;
+        if (manifestVer) {
+          document.querySelectorAll('.brand-version').forEach(el => {
+            el.textContent = `v${manifestVer}`;
+          });
+        }
+      } catch (_) {}
+    });
 
   initTabs();
   checkBackendHealth();
