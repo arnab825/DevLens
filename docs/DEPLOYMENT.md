@@ -15,23 +15,23 @@ This method requires zero compilation or build tooling:
 2. Navigate to `chrome://extensions` (or `edge://extensions`).
 3. Toggle on **Developer mode** in the top right corner.
 4. Click **Load unpacked**.
-5. Select the `e:\DevLens\extension` folder.
+5. Select the `extension/` folder inside your cloned DevLens repository (e.g. `<repo_root>/extension`).
 6. The DevLens icon will appear in the browser toolbar. Pin it for easy access.
 
 ### 2.2 Production Packaging for Chrome Web Store
 To package DevLens for public or team distribution:
 1. **Prerequisite Check**:
-   - Ensure `extension/manifest.json` contains semantic `version` (e.g. `1.0.0`).
+   - Ensure `extension/manifest.json` contains semantic `version` (e.g. `0.1.1`).
    - Validate that all asset paths (icons, scripts) exist.
 2. **Create Zip Archive**:
    Create a zip of the `extension` folder excluding OS metadata:
    ```powershell
-   Compress-Archive -Path e:\DevLens\extension\* -DestinationPath e:\DevLens\devlens-extension-v1.0.0.zip -Force
+   Compress-Archive -Path extension\* -DestinationPath dist\devlens-extension.zip -Force
    ```
 3. **Chrome Web Store Submission**:
    - Navigate to the [Chrome Developer Dashboard](https://chrome.google.com/webstore/devconsole/).
    - Pay one-time developer registration fee ($5).
-   - Upload `devlens-extension-v1.0.0.zip`.
+   - Upload `dist\devlens-extension.zip`.
    - Provide Privacy Policy declaration:
      - Disclose that diagnostic data remains local to the user's browser and loopback interface (`http://127.0.0.1`).
      - No personal data or browsing history is collected or transmitted off-device.
@@ -44,7 +44,7 @@ To package DevLens for public or team distribution:
 ### 3.1 Local Workstation Setup (Virtual Environment)
 1. **Create and activate Python virtual environment**:
    ```powershell
-   cd e:\DevLens\backend
+   cd backend
    python -m venv venv
    .\venv\Scripts\Activate.ps1
    ```

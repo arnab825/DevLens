@@ -68,7 +68,7 @@ From the root directory, double-click:
 2. Navigate to `chrome://extensions`.
 3. Toggle on **Developer mode** in the top-right corner.
 4. Click **Load unpacked**.
-5. Select the `e:\DevLens\extension` directory.
+5. Select the `extension/` directory inside your cloned project (e.g. `<path_to_project>/DevLens/extension`).
 6. The DevLens icon will appear in your browser toolbar.
 
 ### Step 3: Run Interactive Diagnostics
@@ -80,10 +80,10 @@ From the root directory, double-click:
 
 ## 4. Automated Packaging & Production Releases
 
-DevLens has a single-command automated packaging and release tool: [`package_release.bat`](file:///e:/DevLens/package_release.bat).
+DevLens has a single-command automated packaging and release tool: [`package_release.bat`](package_release.bat).
 
 ### Step-by-Step Release Workflow:
-1. Open your terminal in `e:\DevLens` and run:
+1. Open your terminal in the root repository directory and run:
    ```cmd
    .\package_release.bat
    ```

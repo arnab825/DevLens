@@ -42,9 +42,9 @@ Verify the health check: [http://127.0.0.1:8000/api/health](http://127.0.0.1:800
 ### 2. Load the Extension in Chromium (Chrome / Edge / Brave / Opera)
 1. Open `chrome://extensions` or `edge://extensions`.
 2. Toggle on **Developer mode** (top-right corner).
-3. Click **Load unpacked**.
-4. Select the [`extension/`](extension/) directory.
-5. DevLens is installed!
+3. Click **Load unpacked** (top-left).
+4. Select the **`extension/`** folder inside wherever you cloned DevLens on your machine (e.g. `C:\Users\<you>\DevLens\extension` or `~/DevLens/extension`).
+5. DevLens is installed and ready!
 
 ### 3. Open Chrome DevTools (`F12`)
 1. Press **`F12`** on any webpage.
