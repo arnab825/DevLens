@@ -518,13 +518,32 @@ async function executeGithubAudit(repoSlug) {
   resBox.innerHTML = '<p style="color:var(--text-muted);font-size:11px;">Auditing repository structure & ecosystem...</p>';
 
   try {
-    const res = await fetch(`${BACKEND_URL}/api/github/analyze`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ repo: repoSlug })
-    });
-    const data = await res.json();
-    if (data.detail) throw new Error(data.detail);
+    let data;
+    if (isBackendOnline) {
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/github/analyze`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ repo: repoSlug }),
+          signal: AbortSignal.timeout(3000)
+        });
+        data = await res.json();
+        if (data.detail) throw new Error(data.detail);
+      } catch (beErr) {
+        // Fallback to internal engine on backend fetch failure
+        if (window.InternalEngine && typeof window.InternalEngine.auditGithubRepo === 'function') {
+          data = await window.InternalEngine.auditGithubRepo(repoSlug);
+        } else {
+          throw beErr;
+        }
+      }
+    } else {
+      if (window.InternalEngine && typeof window.InternalEngine.auditGithubRepo === 'function') {
+        data = await window.InternalEngine.auditGithubRepo(repoSlug);
+      } else {
+        throw new Error('Internal diagnostic engine unavailable.');
+      }
+    }
 
     // Language pills
     const langPills = (data.languages || []).map(l => 

@@ -166,13 +166,20 @@
     if (document.getElementById('__next') || headersStr.includes('next_data') || headersStr.includes('/_next/')) {
       tech.push('Next.js');
     }
-    if (
-      document.querySelector('[data-reactroot], #root, [id*="root"]') ||
-      window.__REACT_DEVTOOLS_GLOBAL_HOOK__ ||
-      headersStr.includes('react') ||
-      headersStr.includes('react-dom')
-    ) {
-      if (!tech.includes('Next.js')) tech.push('React');
+    // YouTube uses Polymer/WebComponents, not React
+    const isYouTube = host.includes('youtube.com') || host.includes('youtu.be');
+    if (!isYouTube) {
+      if (
+        document.querySelector('[data-reactroot]') ||
+        (document.getElementById('root') && !isYouTube) ||
+        (window.__REACT_DEVTOOLS_GLOBAL_HOOK__ && window.__REACT_DEVTOOLS_GLOBAL_HOOK__.renderers && window.__REACT_DEVTOOLS_GLOBAL_HOOK__.renderers.size > 0) ||
+        headersStr.includes('/react.production') ||
+        headersStr.includes('/react-dom.production')
+      ) {
+        if (!tech.includes('Next.js')) tech.push('React');
+      }
+    } else {
+      tech.push('Polymer / Web Components');
     }
     if (document.querySelector('[data-v-]') || window.__VUE__ || headersStr.includes('vue.js') || headersStr.includes('vue.runtime')) {
       if (headersStr.includes('nuxt') || window.__NUXT__) tech.push('Nuxt.js');
@@ -190,10 +197,13 @@
 
     // --- E. CSS Architecture & UI Kits ---
     const bodyClass = document.body ? document.body.className : '';
-    if (/\b(flex|grid|p-\d|m-\d|text-slate|bg-slate|text-white|dark:)\b/.test(bodyClass) || html.includes('tailwind')) {
+    if (/\b(flex|grid|p-\d|m-\d|text-slate|bg-slate|text-white|dark:)\b/.test(bodyClass) || html.includes('tailwindcss')) {
       tech.push('Tailwind CSS');
     }
-    if (headersStr.includes('bootstrap') || document.querySelector('.container-fluid, .navbar-expand')) tech.push('Bootstrap');
+    // Strict Bootstrap check: avoid matching generic containers unless bootstrap stylesheet or bundle exists
+    if (!isYouTube && (headersStr.includes('bootstrap.min.css') || headersStr.includes('bootstrap.bundle') || (window.bootstrap && typeof window.bootstrap === 'object'))) {
+      tech.push('Bootstrap');
+    }
     if (document.querySelector('[class*="MuiBox-root"], [class*="MuiTypography-root"]')) tech.push('Material UI (MUI)');
 
     // --- F. GitHub Repository Link Detection ---

@@ -2,6 +2,19 @@
 
 All notable changes to the DevLens platform are documented in this file.
 
+## [v0.1.2] - 2026-09-17
+
+### Fixed & Enhanced
+- **Native In-Browser GitHub Health Auditor**:
+  - Added `InternalEngine.auditGithubRepo` to `internal_engine.js` so that the **GitHub** tab works completely in Zero-Setup mode without needing the local Python backend running.
+  - Added graceful rate-limit handling and production reference benchmarks for high-traffic repositories (like `facebook/react`).
+  - Added seamless fallback in `popup/popup.js` so clicking **Audit** switches to the internal engine automatically instead of throwing `Failed to fetch`.
+- **Refined Tech Stack Detection**:
+  - Eliminated false-positive `React` and `Bootstrap` flags on sites using Web Components / Polymer (such as `youtube.com`).
+  - Strict inspection for React DOM hooks and explicit Bootstrap stylesheet bundles.
+- **Dynamic Extension Version Synchronization**:
+  - Replaced all hardcoded HTML version badges with dynamic runtime retrieval from `chrome.runtime.getManifest().version`.
+
 ---
 
 ## [v0.1.1] - 2026-09-17

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "DevLens - Developer Diagnostics",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Privacy-first Chromium extension for console error triage, API failure inspection, and stack trace analysis.",
   "icons": {
     "16": "icons/icon16.png",
