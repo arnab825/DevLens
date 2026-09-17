@@ -49,16 +49,23 @@ if exist "dist\devlens-v%NEW_VER%.zip" (
     echo ===================================================
     echo  Package location: dist\devlens-v%NEW_VER%.zip
     echo.
-    echo  Deploy steps:
-    echo  1. Chrome Web Store:
-    echo     Upload 'dist\devlens-v%NEW_VER%.zip' to:
-    echo     https://chrome.google.com/webstore/devconsole/
-    echo.
-    echo  2. Git Release Tag:
-    echo     git commit -am "Release v%NEW_VER%"
-    echo     git tag v%NEW_VER%
-    echo     git push origin main --tags
-    echo ===================================================
+    set /p PUSH_GH="Do you want to automatically commit, tag, and publish to GitHub? (y/n): "
+    if /i "!PUSH_GH!"=="y" (
+        git add -A
+        git commit -m "Release v%NEW_VER%"
+        git tag -a v%NEW_VER% -m "Release v%NEW_VER%"
+        git push origin main --tags
+        echo.
+        echo [*] Publishing release binaries to GitHub...
+        python publish_release.py "v%NEW_VER%"
+    ) else (
+        echo.
+        echo Manual steps if preferred:
+        echo 1. git commit -am "Release v%NEW_VER%"
+        echo 2. git tag v%NEW_VER%
+        echo 3. git push origin main --tags
+        echo 4. python publish_release.py "v%NEW_VER%"
+    )
 ) else (
     echo [ERROR] Failed to generate zip file.
 )

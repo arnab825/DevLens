@@ -1,0 +1,62 @@
+name: DevLens Automated Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and Publish GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies & Run Tests
+        run: |
+          cd backend
+          pip install -r requirements.txt
+          pytest tests/
+
+      - name: Package Extension (.zip)
+        run: |
+          mkdir -p dist
+          cd extension
+          zip -r ../dist/devlens-${{ github.ref_name }}.zip . -x "*.git*"
+          cd ..
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "DevLens ${{ github.ref_name }} - Production Diagnostics Engine"
+          body: |
+            ### DevLens ${{ github.ref_name }} Production Release
+            Privacy-first Chromium extension & local analysis engine for runtime diagnostics.
+
+            #### Features:
+            - Real-time JavaScript runtime error triage and deduplication.
+            - Failed API and HTTP status code inspection.
+            - Language-aware stack trace parser (JS & Python).
+            - GitHub repository health auditor.
+            - 1-click Markdown (.md) and JSON export for PRs and issues.
+
+            #### Quick Installation:
+            1. Download `devlens-${{ github.ref_name }}.zip` below.
+            2. Extract the `.zip` archive.
+            3. Open Chrome/Brave/Edge to `chrome://extensions` and enable **Developer mode**.
+            4. Click **Load unpacked** and select the extracted folder.
+          files: |
+            dist/devlens-${{ github.ref_name }}.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
