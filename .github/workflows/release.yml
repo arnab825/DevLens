@@ -13,7 +13,7 @@ jobs:
     name: Build and Publish GitHub Release
     runs-on: ubuntu-latest
     env:
-      ACTIONS_ALLOW_UNSECURE_NODE_VERSION: "true"
+      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: "true"
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -36,29 +36,25 @@ jobs:
           zip -r ../dist/devlens-${{ github.ref_name }}.zip . -x "*.git*"
           cd ..
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          name: "DevLens ${{ github.ref_name }} - Production Diagnostics Engine"
-          body: |
-            ### DevLens ${{ github.ref_name }} Production Release
-            Privacy-first Chromium extension & local analysis engine for runtime diagnostics.
-
-            #### Features:
-            - Real-time JavaScript runtime error triage and deduplication.
-            - Failed API and HTTP status code inspection.
-            - Language-aware stack trace parser (JS & Python).
-            - GitHub repository health auditor.
-            - 1-click Markdown (.md) and JSON export for PRs and issues.
-
-            #### Quick Installation:
-            1. Download `devlens-${{ github.ref_name }}.zip` below.
-            2. Extract the `.zip` archive.
-            3. Open Chrome/Brave/Edge to `chrome://extensions` and enable **Developer mode**.
-            4. Click **Load unpacked** and select the extracted folder.
-          files: |
-            dist/devlens-${{ github.ref_name }}.zip
-          draft: false
-          prerelease: false
+      - name: Publish GitHub Release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ github.ref_name }}" \
+            --title "DevLens ${{ github.ref_name }} - Production Diagnostics Engine" \
+            --notes "### DevLens ${{ github.ref_name }} Production Release
+          Privacy-first Chromium extension & local analysis engine for runtime diagnostics.
+
+          #### Features:
+          - Real-time JavaScript runtime error triage and deduplication.
+          - Failed API and HTTP status code inspection.
+          - Language-aware stack trace parser (JS & Python).
+          - GitHub repository health auditor.
+          - 1-click Markdown (.md) and JSON export for PRs and issues.
+
+          #### Quick Installation:
+          1. Download devlens-${{ github.ref_name }}.zip below.
+          2. Extract the .zip archive.
+          3. Open Chrome/Brave/Edge to chrome://extensions and enable Developer mode.
+          4. Click Load unpacked and select the extracted folder." \
+            dist/devlens-${{ github.ref_name }}.zip
