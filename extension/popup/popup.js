@@ -115,7 +115,25 @@ function isMatchingHost(urlStr, targetHost) {
 
 // 3. Load Captured Data
 function loadData() {
-  // Robust active tab resolution (tries lastFocusedWindow first, then currentWindow)
+  // If running inside Chrome DevTools Panel (F12), resolve via inspectedWindow
+  if (chrome.devtools && chrome.devtools.inspectedWindow) {
+    chrome.devtools.inspectedWindow.eval('window.location.href', (result, isException) => {
+      if (!isException && result) {
+        try {
+          currentActiveHost = new URL(result).hostname;
+          const domainEl = document.getElementById('currentDomain');
+          if (domainEl) {
+            domainEl.textContent = currentActiveHost || result;
+            domainEl.title = result;
+          }
+        } catch (_) {}
+      }
+      processStorageDiagnostics();
+    });
+    return;
+  }
+
+  // Otherwise, running in Popup mode: resolve via chrome.tabs
   if (chrome.tabs && chrome.tabs.query) {
     chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
       let targetTab = tabs && tabs[0];

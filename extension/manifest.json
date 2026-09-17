@@ -40,11 +40,13 @@
   "host_permissions": [
     "<all_urls>"
   ],
+  "devtools_page": "devtools/devtools.html",
   "web_accessible_resources": [
     {
       "resources": [
         "sandbox/*",
-        "icons/*"
+        "icons/*",
+        "devtools/*"
       ],
       "matches": [
         "<all_urls>"

@@ -1,0 +1,37 @@
+/* DevTools Panel Responsive Styling (F12 Full-Width Docked Window) */
+html, body {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.devtools-panel-container {
+  width: 100% !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.devtools-panel-container .panel-container {
+  flex: 1;
+  overflow-y: auto;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.devtools-panel-container .nav-tabs {
+  padding: 0 16px;
+}
+
+.devtools-panel-container .app-header {
+  padding: 10px 18px;
+}
+
+.devtools-panel-container .site-telemetry-strip {
+  padding: 8px 18px;
+}
