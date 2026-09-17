@@ -111,6 +111,23 @@ pytest backend/tests/
 
 ---
 
+## 📦 Automated Release & Packaging (`package_release.bat`)
+
+DevLens includes an automated 1-click packaging and release automation tool for project maintainers:
+
+```cmd
+.\package_release.bat
+```
+
+When run, the release tool automatically:
+1. **Prompts for Semantic Version**: (e.g. `0.2.0` or `1.0.0`).
+2. **Synchronizes Version Numbers**: Automatically updates `extension/manifest.json` and `backend/app/main.py`.
+3. **Runs Automated Tests**: Executes the `pytest` test suite to prevent breaking releases.
+4. **Packages the Extension**: Compiles clean production `.zip` bundles into `dist/devlens-v<version>.zip` ready for Chrome Web Store or GitHub Releases.
+5. **Tags & Publishes to GitHub**: Commits changes, generates the git release tag, and pushes directly to GitHub with automated CI/CD binaries.
+
+---
+
 ## 🤝 Contributing & Security
 Contributions are welcome! Please review our:
 - 📖 **[Contributing Guide](CONTRIBUTING.md)** for PR workflows and testing instructions.
