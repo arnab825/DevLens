@@ -2,6 +2,8 @@ name: DevLens Automated Release
 
 on:
   push:
+    branches:
+      - main
     tags:
       - 'v*'
 
@@ -17,6 +19,15 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve Version from manifest.json
+        id: get_version
+        run: |
+          VERSION=$(python3 -c "import json; print(json.load(open('extension/manifest.json'))['version'])")
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "TAG_NAME=v$VERSION" >> $GITHUB_OUTPUT
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -33,7 +44,7 @@ jobs:
         run: |
           mkdir -p dist
           cd extension
-          zip -r ../dist/devlens-${{ github.ref_name }}.zip . -x "*.git*"
+          zip -r ../dist/devlens-v${{ steps.get_version.outputs.VERSION }}.zip . -x "*.git*"
           cd ..
 
       - name: Publish GitHub Release
@@ -41,7 +52,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cat << 'EOF' > release_notes.md
-          ### DevLens ${{ github.ref_name }} Production Release
+          ### DevLens v${{ steps.get_version.outputs.VERSION }} Production Release
           Privacy-first Chromium extension & local analysis engine for runtime diagnostics.
 
           #### Features:
@@ -52,9 +63,17 @@ jobs:
           - 1-click Markdown (.md) and JSON export for PRs and issues.
 
           #### Quick Installation:
-          1. Download `devlens-${{ github.ref_name }}.zip` below.
+          1. Download `devlens-v${{ steps.get_version.outputs.VERSION }}.zip` below.
           2. Extract the `.zip` archive.
           3. Open Chrome/Brave/Edge to `chrome://extensions` and enable **Developer mode**.
           4. Click **Load unpacked** and select the extracted folder.
           EOF
-          gh release create "${{ github.ref_name }}" --title "DevLens ${{ github.ref_name }} - Production Diagnostics Engine" --notes-file release_notes.md "dist/devlens-${{ github.ref_name }}.zip"
+          
+          # Delete existing release/tag if already exists for this version so it overwrites cleanly
+          gh release delete "${{ steps.get_version.outputs.TAG_NAME }}" --yes || true
+          
+          # Create and upload new release
+          gh release create "${{ steps.get_version.outputs.TAG_NAME }}" \
+            --title "DevLens v${{ steps.get_version.outputs.VERSION }} - Production Diagnostics Engine" \
+            --notes-file release_notes.md \
+            "dist/devlens-v${{ steps.get_version.outputs.VERSION }}.zip"
