@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 echo ===================================================
-echo     DevLens Production Release & Packaging Tool
+echo     DevLens Production Release and Packaging Tool
 echo ===================================================
 echo.
 

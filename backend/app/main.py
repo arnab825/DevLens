@@ -18,7 +18,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="DevLens Diagnostic API",
     description="Privacy-first, local developer diagnostics engine",
-    version="1.1.0",
+    version="1.1.0 ",
     lifespan=lifespan
 )
 
@@ -62,7 +62,7 @@ class ReportPayload(BaseModel):
 def health_check():
     return {
         "status": "ok",
-        "version": "1.1.0",
+        "version": "1.1.0 ",
         "service": "DevLens Analysis Engine",
         "mode": "local-first"
     }
