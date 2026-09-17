@@ -1,22 +1,23 @@
 # DevLens - Deployment & Distribution Plan
 
 ## 1. Overview
-DevLens is distributed in two components:
-1. **The Chromium Browser Extension** (Runs inside Google Chrome, Microsoft Edge, Brave, Opera).
-2. **The Local Python Analysis Backend** (Runs locally on the developer's workstation).
+DevLens can be deployed and used in two modes:
+1. **Zero-Setup Mode (Default)**: The Chromium Extension runs completely standalone inside Google Chrome, Microsoft Edge, Brave, and Opera. It includes a built-in analysis engine (`internal_engine.js`) requiring **no Python installation, no batch files, and no server configuration**.
+2. **Enhanced Server Mode (Optional)**: An optional lightweight Python FastAPI daemon running locally on `http://127.0.0.1:8000` to persist SQLite audit history across browser restarts.
 
 ---
 
 ## 2. Browser Extension Deployment
 
-### 2.1 Local Developer Installation (Unpacked Mode)
+### 2.1 Local Developer / End-User Installation (Unpacked Mode)
 This method requires zero compilation or build tooling:
-1. Open your Chromium browser (Chrome / Edge / Brave).
-2. Navigate to `chrome://extensions` (or `edge://extensions`).
-3. Toggle on **Developer mode** in the top right corner.
-4. Click **Load unpacked**.
-5. Select the `extension/` folder inside your cloned DevLens repository (e.g. `<repo_root>/extension`).
-6. The DevLens icon will appear in the browser toolbar. Pin it for easy access.
+1. Download or clone DevLens onto your machine.
+2. Open your Chromium browser (Chrome / Edge / Brave / Opera).
+3. Navigate to `chrome://extensions` (or `edge://extensions`).
+4. Toggle on **Developer mode** in the top right corner.
+5. Click **Load unpacked**.
+6. Select the `extension/` folder inside your cloned DevLens repository (e.g. `<path_to_repo>/extension`).
+7. DevLens is immediately live! Pin the extension to your toolbar or press **F12** to open the **DevLens** panel in Chrome Developer Tools.
 
 ### 2.2 Production Packaging for Chrome Web Store
 To package DevLens for public or team distribution:

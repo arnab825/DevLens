@@ -5,33 +5,38 @@ This guide covers everything needed to use, develop, inspect, and deploy DevLens
 ---
 
 ## 1. Architecture Overview
-
-DevLens operates as a hybrid privacy-first platform:
+ 
+DevLens operates as a hybrid privacy-first platform that works **out-of-the-box with zero dependencies**:
 ```
-┌────────────────────────────────────────────────────────┐
-│                   Chromium Browser                     │
-│                                                        │
-│  ┌──────────────┐   ┌──────────────┐   ┌────────────┐  │
-│  │ Popup Window │   │ DevTools F12 │   │ Collector  │  │
-│  │ (Toolbar)    │   │ (Dock Panel) │   │ (Content)  │  │
-│  └──────┬───────┘   └──────┬───────┘   └─────┬──────┘  │
-│         │                  │                 │         │
-│         └───────────┬──────┴─────────────────┘         │
-│                     ▼                                  │
-│         [Background Service Worker]                    │
-│             (Per-Tab Storage & Badge)                  │
-└─────────────────────┬──────────────────────────────────┘
-                      │ Local Loopback (HTTP :8000)
+┌──────────────────────────────────────────────────────────────────┐
+│                        Chromium Browser                          │
+│                                                                  │
+│  ┌──────────────┐   ┌──────────────┐   ┌──────────────────────┐  │
+│  │ Popup Window │   │ DevTools F12 │   │ Collector (Content)  │  │
+│  │ (Toolbar)    │   │ (Dock Panel) │   │ & Background Worker  │  │
+│  └──────┬───────┘   └──────┬───────┘   └──────────┬───────────┘  │
+│         │                  │                      │              │
+│         └───────────┬──────┴──────────────────────┘              │
+│                     ▼                                            │
+│        [Native Internal Engine] (Zero-Setup)                     │
+│        - In-browser JS runtime error triage & remediation        │
+│        - Live HTTP & CORS network inspector                      │
+│        - Client-side V8 & Python call stack frame parser         │
+│        - Markdown / JSON triage report generator                 │
+└─────────────────────┬────────────────────────────────────────────┘
+                      │ Optional Loopback (HTTP 127.0.0.1:8000)
                       ▼
-┌────────────────────────────────────────────────────────┐
-│           Local Python FastAPI Analysis Engine         │
-│     - Heuristic Error Analyzer                         │
-│     - HTTP Status & CORS Failure Inspector             │
-│     - Stack Trace Parser (JS / Python)                 │
-│     - Language-Aware GitHub Auditor (Cached)           │
-│     - SQLite Local Audit Database (devlens.db)         │
-└────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────┐
+│           Optional: Local Python FastAPI Server                  │
+│     - Persistent SQLite audit history (devlens.db)               │
+│     - Cross-session multi-tab aggregation                        │
+│     - GitHub Repository auditor with cache resilience            │
+└──────────────────────────────────────────────────────────────────┘
 ```
+
+DevLens automatically negotiates between these two modes:
+1. **Zero-Setup Mode (Default)**: Uses the built-in browser engine (`internal_engine.js`). Shows a cyan **Internal Engine** status pill. No terminal, Python, or batch file required.
+2. **Enhanced Server Mode (Optional)**: If `127.0.0.1:8000` is running, DevLens automatically upgrades to the server mode, displaying a green **Live** status pill and enabling SQLite database storage.
 
 ---
 

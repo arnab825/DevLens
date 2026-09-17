@@ -11,6 +11,10 @@ All notable changes to the DevLens platform are documented in this file.
   - Registered `devtools/devtools.html` and `devtools/devtools.js` via the Manifest V3 `"devtools_page"` API.
   - Added dedicated full-width `DevLens` panel directly inside the browser's native Inspect/DevTools dock (`devtools/panel.html` and `devtools/panel.css`).
   - Added `chrome.devtools.inspectedWindow.eval` support in `popup/popup.js` to automatically scope diagnostics to the currently inspected webpage inside DevTools.
+- **Native Client-Side Internal Engine (`internal_engine.js`)**:
+  - Implemented 100% self-contained JavaScript diagnostics running directly in the extension runtime.
+  - Zero-setup requirement: users do not need Python or `.bat` scripts running to triage JavaScript errors, inspect network anomalies, or parse call stack traces.
+  - Seamless hybrid mode: uses local Python FastAPI server if running, otherwise falls back instantly to the native internal browser engine with a glowing `Internal Engine` status pill.
 - **Automated CI/CD Release Pipeline**:
   - Added `.github/workflows/release.yml` for automated GitHub Actions release builds on `git push origin v*`.
   - Added `publish_release.py` to automate binary release creation and `.zip` asset uploads via GitHub REST API.
