@@ -34,6 +34,16 @@ function clientAnalyzeError(message) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Sync version dynamically from manifest.json
+  try {
+    const manifestVer = chrome.runtime?.getManifest()?.version;
+    if (manifestVer) {
+      document.querySelectorAll('.brand-version').forEach(el => {
+        el.textContent = `v${manifestVer}`;
+      });
+    }
+  } catch (e) {}
+
   initTabs();
   checkBackendHealth();
   loadData();
