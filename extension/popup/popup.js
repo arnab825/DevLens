@@ -640,6 +640,39 @@ function setupEventListeners() {
   document.getElementById('parseStacktraceBtn').addEventListener('click', handleParseStacktrace);
   document.getElementById('analyzeGithubBtn').addEventListener('click', handleAnalyzeGithub);
 
+  // Quick Sample Presets for Stack Trace
+  const jsBtn = document.getElementById('loadJsSampleBtn');
+  if (jsBtn) {
+    jsBtn.addEventListener('click', () => {
+      const input = document.getElementById('stacktraceInput');
+      if (input) {
+        input.value = `TypeError: Cannot read properties of undefined (reading 'map')
+    at renderItems (https://app.example.com/assets/dashboard.js:42:15)
+    at Object.onSuccess (https://app.example.com/assets/api.js:108:9)
+    at XMLHttpRequest.handleLoad (https://app.example.com/assets/network.js:84:18)`;
+        handleParseStacktrace();
+      }
+    });
+  }
+
+  const pyBtn = document.getElementById('loadPySampleBtn');
+  if (pyBtn) {
+    pyBtn.addEventListener('click', () => {
+      const input = document.getElementById('stacktraceInput');
+      if (input) {
+        input.value = `Traceback (most recent call last):
+  File "/app/main.py", line 58, in get_user_profile
+    user = db.query(User).filter(User.id == user_id).first()
+  File "/app/database/session.py", line 124, in query
+    return self._execute_query(statement)
+  File "/app/database/engine.py", line 87, in _execute_query
+    raise DatabaseConnectionError("Connection to postgres pool timed out")
+DatabaseConnectionError: Connection to postgres pool timed out`;
+        handleParseStacktrace();
+      }
+    });
+  }
+
   document.getElementById('clearErrorsBtn').addEventListener('click', clearErrors);
   document.getElementById('clearNetworkBtn').addEventListener('click', clearNetwork);
   document.getElementById('clearAllBtn').addEventListener('click', clearAll);
