@@ -138,6 +138,17 @@ html, body {
   color: #FDE68A;
 }
 
+.backend-pill.internal .status-dot {
+  background-color: var(--accent-blue);
+  box-shadow: 0 0 5px var(--accent-blue);
+}
+
+.backend-pill.internal {
+  border-color: rgba(56, 189, 248, 0.35);
+  color: #BAE6FD;
+  background: rgba(14, 165, 233, 0.1);
+}
+
 /* 2. Permanent Active Website Telemetry Strip */
 .site-telemetry-strip {
   display: flex;

@@ -65,9 +65,9 @@ async function checkBackendHealth() {
   }
 
   isBackendOnline = false;
-  statusPill.className = 'backend-pill offline';
-  label.textContent = 'Rule-Mode (Offline)';
-  statusPill.title = 'Backend offline: Using built-in browser rule engine';
+  statusPill.className = 'backend-pill internal';
+  label.textContent = 'Internal Engine';
+  statusPill.title = 'DevLens Browser Engine Active: All diagnostics run client-side with zero setup.';
 }
 
 // 2. Navigation Tabs
@@ -315,7 +315,7 @@ function renderNetwork(network) {
 // 4. Analysis Handlers
 async function triggerErrorAnalysis(err) {
   openDrawer('Analyzing Error...');
-  let analysis;
+  let analysis = null;
 
   if (isBackendOnline) {
     try {
@@ -331,19 +331,19 @@ async function triggerErrorAnalysis(err) {
         })
       });
       analysis = await res.json();
-    } catch (_) {
-      analysis = clientAnalyzeError(err.message);
-    }
-  } else {
-    analysis = clientAnalyzeError(err.message);
+    } catch (_) {}
   }
 
-  displayAnalysisResult(err.message, analysis);
+  if (!analysis && typeof InternalEngine !== 'undefined') {
+    analysis = InternalEngine.analyzeError(err.message, err.stack);
+  }
+
+  displayAnalysisResult(err.message, analysis || clientAnalyzeError(err.message));
 }
 
 async function triggerNetworkAnalysis(item) {
   openDrawer(`Network: ${item.method} ${item.status}`);
-  let analysis;
+  let analysis = null;
 
   if (isBackendOnline) {
     try {
@@ -358,24 +358,19 @@ async function triggerNetworkAnalysis(item) {
         })
       });
       analysis = await res.json();
-    } catch (_) {
-      analysis = {
-        category: item.status === 0 ? "Network/CORS" : `HTTP ${item.status}`,
-        summary: `Status code ${item.status}`,
-        possible_causes: ["Request failed or endpoint unreachable"],
-        suggested_checks: ["Verify API server and CORS headers"]
-      };
-    }
-  } else {
-    analysis = {
-      category: item.status === 0 ? "Network/CORS" : `HTTP ${item.status}`,
-      summary: `Request finished with status ${item.status}`,
-      possible_causes: ["Target endpoint returned an error status or was blocked by browser"],
-      suggested_checks: ["Verify server logs", "Check CORS and auth tokens"]
-    };
+    } catch (_) {}
   }
 
-  displayAnalysisResult(item.url, analysis);
+  if (!analysis && typeof InternalEngine !== 'undefined') {
+    analysis = InternalEngine.analyzeNetwork(item.method, item.url, item.status, item.duration_ms);
+  }
+
+  displayAnalysisResult(item.url, analysis || {
+    category: `HTTP ${item.status}`,
+    summary: `Request completed with status ${item.status}`,
+    possible_causes: ["Target endpoint returned error or was blocked."],
+    suggested_checks: ["Inspect server logs and request headers."]
+  });
 }
 
 function displayAnalysisResult(title, analysis) {
@@ -425,14 +420,24 @@ async function handleParseStacktrace() {
   resBox.classList.remove('hidden');
   resBox.innerHTML = '<p style="color:var(--text-muted)">Parsing frames...</p>';
 
-  try {
-    const res = await fetch(`${BACKEND_URL}/api/analyze/stacktrace`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ raw_trace: trace })
-    });
-    const data = await res.json();
-    
+  let data = null;
+  if (isBackendOnline) {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/analyze/stacktrace`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ raw_trace: trace })
+      });
+      data = await res.json();
+    } catch (_) {}
+  }
+
+  // Fallback seamlessly to native internal browser engine
+  if (!data && typeof InternalEngine !== 'undefined') {
+    data = InternalEngine.parseStacktrace(trace);
+  }
+
+  if (data) {
     let framesHtml = (data.frames || []).map(f => `
       <div style="font-family:var(--font-mono);font-size:11px;padding:4px 0;border-bottom:1px solid var(--border-color);">
         <span style="color:var(--accent-blue)">${escapeHtml(f.function || 'anonymous')}</span>
@@ -454,8 +459,8 @@ async function handleParseStacktrace() {
         <div style="max-height:160px;overflow-y:auto;margin-top:4px;">${framesHtml}</div>
       </div>
     `;
-  } catch (err) {
-    resBox.innerHTML = `<p style="color:var(--accent-red)">Backend required for advanced stack trace parsing. Start local server on :8000.</p>`;
+  } else {
+    resBox.innerHTML = `<p style="color:var(--accent-red)">Unable to parse stack trace format.</p>`;
   }
 }
 
