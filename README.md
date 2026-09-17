@@ -23,25 +23,56 @@ DevLens brings actionable diagnostic triage into the browser. It monitors runtim
 
 ## ⚡ Quick Start (Zero Setup Required!)
 
-DevLens features a **built-in browser diagnostics engine** (`internal_engine.js`) that runs 100% locally in the browser with **zero configuration, no terminal, and no Python installation needed**.
+DevLens features a **built-in browser diagnostics engine** (`internal_engine.js`) that runs 100% locally in your browser with **no terminal, no Git, and no Python required**.
 
 ---
 
-### Step 1: Load the Extension in Chromium (Chrome / Edge / Brave / Opera)
-1. Clone or download this repository to any folder on your computer.
-2. Open your browser and navigate to `chrome://extensions` (or `edge://extensions` / `brave://extensions`).
-3. Turn on the **Developer mode** toggle in the top-right corner.
-4. Click the **Load unpacked** button in the top-left corner.
-5. Select the **`extension/`** folder located inside your downloaded DevLens folder.
-6. 🎉 **DevLens is installed and fully functional!** The extension icon will appear in your browser toolbar.
+### 📦 Option A: Install from Downloaded Release `.zip` (Recommended for Users)
+
+If you downloaded the pre-packaged zip from [GitHub Releases](https://github.com/arnab825/DevLens/releases):
+
+1. **Download the Release**:
+   - Go to [GitHub Releases](https://github.com/arnab825/DevLens/releases).
+   - Under **Assets**, click to download **`devlens-v0.1.1.zip`** (do *not* download "Source code.zip").
+2. **Extract the Archive**:
+   - Locate the downloaded `devlens-v0.1.1.zip` in your Downloads folder.
+   - Right-click the file and select **Extract All...** (or unzip it with any tool).
+   - Extract it into any folder (e.g. `Downloads\devlens-v0.1.1`).
+   - *Note*: Inside this extracted folder, you will see `manifest.json`, `popup/`, `icons/`, and `devtools/`.
+3. **Open Extensions in Chromium**:
+   - Open Google Chrome, Brave, Microsoft Edge, or Opera.
+   - Navigate to `chrome://extensions` (or `edge://extensions` / `brave://extensions`).
+4. **Enable Developer Mode**:
+   - Switch on the **Developer mode** toggle in the top-right corner.
+5. **Load Unpacked**:
+   - Click the **Load unpacked** button in the top-left corner.
+   - Select the folder containing `manifest.json`.
+6. 🎉 **Done!** DevLens will appear in your toolbar and inside Chrome DevTools (`F12`).
 
 ---
 
-### Step 2: Open in Chrome DevTools (`F12`)
-1. Press **`F12`** (or `Ctrl+Shift+I` / `Cmd+Option+I` on macOS) on any webpage or web application.
-2. Look for the **DevLens** tab in the top navigation bar of DevTools (next to *Elements*, *Console*, *Network*).
-   *(If your DevTools window is narrow, click the `»` overflow chevron to find DevLens).*
-3. Enjoy docked, real-time diagnostic triage side-by-side with your code while debugging!
+### 💻 Option B: Install from Git Clone (For Developers)
+
+If you prefer cloning the Git repository:
+
+1. **Clone the Repo**:
+   ```bash
+   git clone https://github.com/arnab825/DevLens.git
+   ```
+2. **Open Extensions**:
+   - Navigate to `chrome://extensions` in your browser.
+   - Toggle on **Developer mode** (top-right).
+3. **Load Unpacked**:
+   - Click **Load unpacked** (top-left).
+   - Select the **`extension/`** folder located inside your cloned repository directory.
+4. 🎉 **Ready to use!**
+
+---
+
+### 🔍 Using DevLens in Chrome DevTools (`F12`)
+1. Press **`F12`** (or `Ctrl+Shift+I` / `Cmd+Option+I` on macOS) on any webpage.
+2. Select the **DevLens** tab in the top navigation bar of DevTools.
+3. Enjoy live diagnostic triage side-by-side with your code while debugging!
 
 ---
 

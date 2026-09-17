@@ -7,17 +7,27 @@ DevLens can be deployed and used in two modes:
 
 ---
 
-## 2. Browser Extension Deployment
-
-### 2.1 Local Developer / End-User Installation (Unpacked Mode)
-This method requires zero compilation or build tooling:
-1. Download or clone DevLens onto your machine.
-2. Open your Chromium browser (Chrome / Edge / Brave / Opera).
-3. Navigate to `chrome://extensions` (or `edge://extensions`).
-4. Toggle on **Developer mode** in the top right corner.
-5. Click **Load unpacked**.
-6. Select the `extension/` folder inside your cloned DevLens repository (e.g. `<path_to_repo>/extension`).
-7. DevLens is immediately live! Pin the extension to your toolbar or press **F12** to open the **DevLens** panel in Chrome Developer Tools.
+## 2. Browser Extension Installation
+ 
+### 2.1 Option A: Installation from GitHub Release `.zip` (Standard User)
+This method requires **no Git, no terminal, and no Python**:
+1. Go to [GitHub Releases](https://github.com/arnab825/DevLens/releases).
+2. Under **Assets**, click to download **`devlens-v0.1.1.zip`**.
+3. Locate the file in your downloads and extract it (right-click ➔ **Extract All...**).
+4. Open Google Chrome, Microsoft Edge, Brave, or Opera.
+5. In the URL bar, go to `chrome://extensions` (or `edge://extensions`).
+6. Turn on the **Developer mode** toggle in the top-right corner.
+7. Click the **Load unpacked** button in the top-left corner.
+8. Select the folder you just extracted (the folder containing `manifest.json`).
+9. **Done!** DevLens is ready. Pin it to your browser toolbar or press `F12` to open it in DevTools.
+ 
+### 2.2 Option B: Installation from Local Git Clone (Developer)
+For active development directly from the source repository:
+1. Clone the repository: `git clone https://github.com/arnab825/DevLens.git`.
+2. Open `chrome://extensions` and enable **Developer mode**.
+3. Click **Load unpacked**.
+4. Select the **`extension/`** folder inside your cloned repository directory.
+5. Changes made to files in `extension/` can be refreshed instantly with the ⟳ reload button on the extension card.
 
 ### 2.2 Production Packaging for Chrome Web Store
 To package DevLens for public or team distribution:
