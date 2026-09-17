@@ -111,9 +111,10 @@ pytest backend/tests/
 
 ---
 
-## 🤝 Contributing
+## 🤝 Contributing & Security
 Contributions are welcome! Please review our:
 - 📖 **[Contributing Guide](CONTRIBUTING.md)** for PR workflows and testing instructions.
+- 🛡️ **[Security Policy](SECURITY.md)** for responsible vulnerability reporting and privacy disclosures.
 - 📜 **[Code of Conduct](CODE_OF_CONDUCT.md)** to understand community standards.
 
 ---
