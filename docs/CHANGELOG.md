@@ -2,6 +2,18 @@
 
 All notable changes to the DevLens platform are documented in this file.
 
+## [v0.1.3] - 2026-09-17
+
+### Added & Enhanced
+- **Interactive Stack Trace Samples**:
+  - Added 1-click **`+ JS Sample`** button to both Popup and DevTools panels to immediately demonstrate V8 JavaScript stack frame parsing with zero manual typing.
+  - Added 1-click **`+ Python Sample`** button to demonstrate Python traceback parsing and root-origin identification.
+- **GitHub Release CI/CD & Dynamic Updater**:
+  - Background service worker polls repository manifest to notify users of new releases with a pulsing update pill.
+  - Rebuilt production distribution archive (`devlens-v0.1.3.zip`).
+
+---
+
 ## [v0.1.2] - 2026-09-17
 
 ### Fixed & Enhanced
