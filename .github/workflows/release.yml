@@ -12,6 +12,8 @@ jobs:
   release:
     name: Build and Publish GitHub Release
     runs-on: ubuntu-latest
+    env:
+      ACTIONS_ALLOW_UNSECURE_NODE_VERSION: "true"
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
