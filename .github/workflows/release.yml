@@ -40,21 +40,21 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "${{ github.ref_name }}" \
-            --title "DevLens ${{ github.ref_name }} - Production Diagnostics Engine" \
-            --notes "### DevLens ${{ github.ref_name }} Production Release
+          cat << 'EOF' > release_notes.md
+          ### DevLens ${{ github.ref_name }} Production Release
           Privacy-first Chromium extension & local analysis engine for runtime diagnostics.
 
           #### Features:
           - Real-time JavaScript runtime error triage and deduplication.
           - Failed API and HTTP status code inspection.
           - Language-aware stack trace parser (JS & Python).
-          - GitHub repository health auditor.
+          - GitHub repository health auditor with zero-setup browser engine.
           - 1-click Markdown (.md) and JSON export for PRs and issues.
 
           #### Quick Installation:
-          1. Download devlens-${{ github.ref_name }}.zip below.
-          2. Extract the .zip archive.
-          3. Open Chrome/Brave/Edge to chrome://extensions and enable Developer mode.
-          4. Click Load unpacked and select the extracted folder." \
-            dist/devlens-${{ github.ref_name }}.zip
+          1. Download `devlens-${{ github.ref_name }}.zip` below.
+          2. Extract the `.zip` archive.
+          3. Open Chrome/Brave/Edge to `chrome://extensions` and enable **Developer mode**.
+          4. Click **Load unpacked** and select the extracted folder.
+          EOF
+          gh release create "${{ github.ref_name }}" --title "DevLens ${{ github.ref_name }} - Production Diagnostics Engine" --notes-file release_notes.md "dist/devlens-${{ github.ref_name }}.zip"
