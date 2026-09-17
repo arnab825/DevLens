@@ -149,6 +149,24 @@ html, body {
   background: rgba(14, 165, 233, 0.1);
 }
 
+.backend-pill.update-available {
+  border-color: rgba(244, 63, 94, 0.5);
+  color: #FECDD3;
+  background: rgba(225, 29, 72, 0.2);
+  animation: pulse-update 1.5s infinite;
+}
+
+.backend-pill.update-available .status-dot {
+  background-color: #F43F5E;
+  box-shadow: 0 0 7px #F43F5E;
+}
+
+@keyframes pulse-update {
+  0% { opacity: 0.85; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.03); }
+  100% { opacity: 0.85; transform: scale(1); }
+}
+
 /* 2. Permanent Active Website Telemetry Strip */
 .site-telemetry-strip {
   display: flex;

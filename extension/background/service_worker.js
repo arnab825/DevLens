@@ -12,6 +12,7 @@ chrome.runtime.onUpdateAvailable.addListener((details) => {
 });
 
 // Periodic production update check (every few hours in prod, or on startup)
+// Periodic production update check (every few hours in prod, or on startup)
 function checkProductionUpdates() {
   if (chrome.runtime.requestUpdateCheck) {
     chrome.runtime.requestUpdateCheck((status, details) => {
@@ -21,9 +22,26 @@ function checkProductionUpdates() {
       }
     });
   }
+
+  // 2. Auto-check GitHub for new releases
+  fetch('https://raw.githubusercontent.com/arnab825/DevLens/main/extension/manifest.json', { cache: 'no-store' })
+    .then(r => r.json())
+    .then(remoteManifest => {
+      const currentVer = chrome.runtime.getManifest().version;
+      if (remoteManifest && remoteManifest.version && remoteManifest.version !== currentVer) {
+        console.log(`[DevLens] New version on GitHub: v${remoteManifest.version} (current: v${currentVer})`);
+        chrome.storage.local.set({
+          update_available: {
+            current: currentVer,
+            latest: remoteManifest.version
+          }
+        });
+      }
+    })
+    .catch(() => {});
 }
 
-// 2. Local Developer Hot-Reload (via local analysis backend)
+// 3. Local Developer Hot-Reload (via local analysis backend)
 function checkForDevUpdates() {
   fetch('http://127.0.0.1:8000/api/health', { method: 'GET', cache: 'no-store' })
     .then(r => r.json())

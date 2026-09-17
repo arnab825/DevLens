@@ -77,7 +77,26 @@ async function checkBackendHealth() {
   isBackendOnline = false;
   statusPill.className = 'backend-pill internal';
   label.textContent = 'Internal Engine';
-  statusPill.title = 'DevLens Browser Engine Active: All diagnostics run client-side with zero setup.';
+  statusPill.title = 'DevLens Browser Engine Active. Click to reload extension.';
+  statusPill.style.cursor = 'pointer';
+  statusPill.onclick = () => {
+    chrome.runtime.reload();
+  };
+
+  // Check if a newer version is available on GitHub
+  try {
+    chrome.storage.local.get(['update_available'], (res) => {
+      if (res && res.update_available && res.update_available.latest) {
+        const latest = res.update_available.latest;
+        const current = chrome.runtime?.getManifest()?.version;
+        if (latest !== current) {
+          label.textContent = `Update: v${latest}`;
+          statusPill.className = 'backend-pill update-available';
+          statusPill.title = `New version v${latest} available! Click to update & reload.`;
+        }
+      }
+    });
+  } catch (_) {}
 }
 
 // 2. Navigation Tabs
