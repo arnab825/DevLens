@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevLens Diagnostics</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- 1. Permanent Main Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">
+          <img src="../icons/icon48.png" alt="DevLens Logo" class="brand-logo-img" width="22" height="22">
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">DevLens</span>
+          <span class="brand-version">v1.1.0</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <button id="openSandboxBtn" class="header-link-btn" title="Open interactive test sandbox">Sandbox ↗</button>
+        <div id="backendStatus" class="backend-pill offline" title="Checking local backend...">
+          <span class="status-dot"></span>
+          <span class="status-label">Checking...</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- 2. Permanent Active Website Telemetry Strip -->
+    <div class="site-telemetry-strip">
+      <div class="telemetry-top-row">
+        <div class="telemetry-site-info">
+          <span class="pulse-dot"></span>
+          <span id="currentDomain" class="site-domain" title="Active Page">Detecting page...</span>
+        </div>
+        <span id="healthBadge" class="health-pill clean">100% Clean</span>
+      </div>
+      <div id="techPillsContainer" class="site-tech-tags">
+        <!-- Injected: e.g. React, Tailwind, Netlify -->
+      </div>
+    </div>
+
+    <!-- 3. Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="tab-btn active" data-tab="console">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+        <span>Console</span>
+        <span id="badgeErrors" class="tab-count">0</span>
+      </button>
+      <button class="tab-btn" data-tab="network">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+        <span>Network</span>
+        <span id="badgeNetwork" class="tab-count">0</span>
+      </button>
+      <button class="tab-btn" data-tab="stacktrace">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+        <span>Stack Trace</span>
+      </button>
+      <button class="tab-btn" data-tab="github">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+        <span>GitHub</span>
+      </button>
+      <button class="tab-btn" data-tab="reports">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        <span>Report</span>
+      </button>
+    </nav>
+
+    <!-- 4. Tab Panels (Strict Scrollable Viewport) -->
+    <main class="panel-container">
+      
+      <!-- Panel 1: Console Errors -->
+      <section id="tab-console" class="tab-panel active">
+        <div class="panel-toolbar">
+          <div class="scope-toggle">
+            <button id="scopeThisPage" class="scope-btn active">This Page</button>
+            <button id="scopeAllHistory" class="scope-btn">All History</button>
+          </div>
+          <button id="clearErrorsBtn" class="btn-ghost" title="Clear errors">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            <span>Clear</span>
+          </button>
+        </div>
+        <div id="errorsList" class="cards-list">
+          <div class="empty-state">
+            <div class="empty-icon">✓</div>
+            <div class="empty-title">All Systems Normal</div>
+            <p>No uncaught runtime errors or exceptions on this page.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel 2: Network / API -->
+      <section id="tab-network" class="tab-panel">
+        <div class="panel-toolbar">
+          <span class="toolbar-title">Network Anomalies</span>
+          <button id="clearNetworkBtn" class="btn-ghost" title="Clear network">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            <span>Clear</span>
+          </button>
+        </div>
+        <div id="networkList" class="cards-list">
+          <div class="empty-state">
+            <div class="empty-icon">⚡</div>
+            <div class="empty-title">Zero API Failures</div>
+            <p>Monitored fetch and XHR calls are completing successfully.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel 3: Stack Trace Analyzer -->
+      <section id="tab-stacktrace" class="tab-panel">
+        <div class="panel-toolbar">
+          <span class="toolbar-title">Stack Trace Parser</span>
+        </div>
+        <div class="form-group">
+          <textarea id="stacktraceInput" placeholder="Paste raw JavaScript or Python stack trace here..."></textarea>
+          <button id="parseStacktraceBtn" class="btn-primary">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            <span>Analyze Trace</span>
+          </button>
+        </div>
+        <div id="stacktraceResult" class="analysis-box hidden"></div>
+      </section>
+
+      <!-- Panel 4: GitHub Repository Analyzer -->
+      <section id="tab-github" class="tab-panel">
+        <div class="panel-toolbar">
+          <span class="toolbar-title">Repository Health Auditor</span>
+        </div>
+        <div class="form-group row">
+          <input type="text" id="githubRepoInput" placeholder="owner/repo (e.g. facebook/react)" />
+          <button id="analyzeGithubBtn" class="btn-primary">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <span>Audit</span>
+          </button>
+        </div>
+        <div id="githubResult" class="analysis-box hidden"></div>
+      </section>
+
+      <!-- Panel 5: Reports & Export -->
+      <section id="tab-reports" class="tab-panel">
+        <div class="panel-toolbar">
+          <span class="toolbar-title">Diagnostic Triage Report</span>
+          <button id="clearAllBtn" class="btn-ghost-danger" title="Clear all session history">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            Clear Data
+          </button>
+        </div>
+
+        <div class="report-action-cards">
+          <button id="exportMdBtn" class="action-card-btn primary">
+            <div class="card-btn-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+            </div>
+            <div class="card-btn-text">
+              <span class="card-btn-title">Export Markdown</span>
+              <span class="card-btn-subtitle">.md report for PRs & bugs</span>
+            </div>
+          </button>
+
+          <button id="exportJsonBtn" class="action-card-btn">
+            <div class="card-btn-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+            </div>
+            <div class="card-btn-text">
+              <span class="card-btn-title">Export JSON</span>
+              <span class="card-btn-subtitle">Structured payload data</span>
+            </div>
+          </button>
+        </div>
+
+        <div class="preview-container">
+          <div class="preview-header">
+            <span class="preview-label">Report Preview</span>
+            <button id="copyReportBtn" class="btn-copy" title="Copy preview to clipboard">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <span id="copyBtnText">Copy</span>
+            </button>
+          </div>
+          <pre id="reportPreview">Click 'Export Markdown' to generate and preview report.</pre>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Diagnostic Details Drawer / Modal -->
+    <div id="diagDrawer" class="drawer hidden">
+      <div class="drawer-header">
+        <span id="drawerTitle" class="drawer-title">Diagnostic Analysis</span>
+        <button id="closeDrawerBtn" class="btn-close">&times;</button>
+      </div>
+      <div id="drawerBody" class="drawer-body">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

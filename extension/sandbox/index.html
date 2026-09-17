@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevLens Sandbox & Test Harness</title>
+  <style>
+    :root {
+      --bg: #0B0F19;
+      --card: #151D2F;
+      --border: #24324D;
+      --text: #F1F5F9;
+      --text-dim: #94A3B8;
+      --accent: #38BDF8;
+      --red: #F87171;
+      --amber: #FBBF24;
+      --green: #34D399;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      max-width: 800px;
+      width: 100%;
+    }
+    header {
+      margin-bottom: 30px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 20px;
+    }
+    h1 {
+      margin: 0 0 8px 0;
+      font-size: 26px;
+      color: #fff;
+    }
+    p {
+      color: var(--text-dim);
+      margin: 0;
+      font-size: 14px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .card h2 {
+      margin: 0 0 12px 0;
+      font-size: 16px;
+      color: var(--accent);
+    }
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    button {
+      background: #1E293B;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 13px;
+      text-align: left;
+      transition: all 0.15s;
+    }
+    button:hover {
+      background: var(--border);
+      border-color: var(--accent);
+    }
+    button.red {
+      border-left: 4px solid var(--red);
+    }
+    button.amber {
+      border-left: 4px solid var(--amber);
+    }
+    .log-box {
+      margin-top: 25px;
+      background: #070A10;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px;
+      font-family: monospace;
+      font-size: 12px;
+      color: var(--green);
+      min-height: 80px;
+      max-height: 160px;
+      overflow-y: auto;
+    }
+    .badge {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>DevLens Interactive Test Harness <span class="badge">Live Sandbox</span></h1>
+      <p>Use the buttons below to generate controlled frontend runtime errors, API network failures, and CORS blocks to verify DevLens detection in real time.</p>
+    </header>
+
+    <div class="grid">
+      <!-- Section 1: Runtime Errors -->
+      <div class="card">
+        <h2>1. JavaScript Runtime Errors</h2>
+        <div class="btn-group">
+          <button class="red" id="btnTypeError">
+            Trigger TypeError (Undefined Property Access)
+          </button>
+          <button class="red" id="btnRefError">
+            Trigger ReferenceError (Undeclared Var)
+          </button>
+          <button class="red" id="btnRejection">
+            Trigger Unhandled Promise Rejection
+          </button>
+        </div>
+      </div>
+
+      <!-- Section 2: Network / API Failures -->
+      <div class="card">
+        <h2>2. Network & API Failures</h2>
+        <div class="btn-group">
+          <button class="amber" id="btn404">
+            Fetch 404 Endpoint (/api/non-existent)
+          </button>
+          <button class="amber" id="btnAuth">
+            Fetch 401 with Token (Masking Test)
+          </button>
+          <button class="amber" id="btnCors">
+            Trigger CORS / Network Block
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="log-box" id="statusLog">
+      &gt; Sandbox initialized. Open DevLens extension popup in your browser toolbar to monitor live events.
+    </div>
+  </div>
+
+  <script src="sandbox.js"></script>
+</body>
+</html>
