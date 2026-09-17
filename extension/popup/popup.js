@@ -531,15 +531,17 @@ async function executeGithubAudit(repoSlug) {
         if (data.detail) throw new Error(data.detail);
       } catch (beErr) {
         // Fallback to internal engine on backend fetch failure
-        if (window.InternalEngine && typeof window.InternalEngine.auditGithubRepo === 'function') {
-          data = await window.InternalEngine.auditGithubRepo(repoSlug);
+        const engine = (typeof InternalEngine !== 'undefined') ? InternalEngine : (typeof window !== 'undefined' ? window.InternalEngine : null);
+        if (engine && typeof engine.auditGithubRepo === 'function') {
+          data = await engine.auditGithubRepo(repoSlug);
         } else {
           throw beErr;
         }
       }
     } else {
-      if (window.InternalEngine && typeof window.InternalEngine.auditGithubRepo === 'function') {
-        data = await window.InternalEngine.auditGithubRepo(repoSlug);
+      const engine = (typeof InternalEngine !== 'undefined') ? InternalEngine : (typeof window !== 'undefined' ? window.InternalEngine : null);
+      if (engine && typeof engine.auditGithubRepo === 'function') {
+        data = await engine.auditGithubRepo(repoSlug);
       } else {
         throw new Error('Internal diagnostic engine unavailable.');
       }

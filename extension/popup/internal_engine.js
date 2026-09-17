@@ -430,3 +430,10 @@ const InternalEngine = {
     };
   }
 };
+
+if (typeof window !== 'undefined') {
+  window.InternalEngine = InternalEngine;
+}
+if (typeof globalThis !== 'undefined') {
+  globalThis.InternalEngine = InternalEngine;
+}
