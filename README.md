@@ -31,14 +31,15 @@ DevLens features a **built-in browser diagnostics engine** (`internal_engine.js`
 
 If you downloaded the pre-packaged zip from [GitHub Releases](https://github.com/arnab825/DevLens/releases):
 
-1. **Download the Release**:
-   - Go to [GitHub Releases](https://github.com/arnab825/DevLens/releases).
-   - Under **Assets**, click to download **`devlens-v0.1.1.zip`** (do *not* download "Source code.zip").
+1. **Download the Latest Release**:
+   - Go to [GitHub Releases](https://github.com/arnab825/DevLens/releases/latest).
+   - Under **Assets**, click to download the release zip: **`devlens-v*.zip`** (e.g. `devlens-v0.1.1.zip`).
+   - *(Note: Do not download the auto-generated "Source code.zip" as it contains backend and testing files not needed for running the extension).*
 2. **Extract the Archive**:
-   - Locate the downloaded `devlens-v0.1.1.zip` in your Downloads folder.
+   - Locate the downloaded zip file in your `Downloads` folder.
    - Right-click the file and select **Extract All...** (or unzip it with any tool).
-   - Extract it into any folder (e.g. `Downloads\devlens-v0.1.1`).
-   - *Note*: Inside this extracted folder, you will see `manifest.json`, `popup/`, `icons/`, and `devtools/`.
+   - Extract it into any folder (e.g. `Downloads\devlens`).
+   - *Verification*: Inside the extracted folder, you will see `manifest.json`, `popup/`, `devtools/`, and `icons/`.
 3. **Open Extensions in Chromium**:
    - Open Google Chrome, Brave, Microsoft Edge, or Opera.
    - Navigate to `chrome://extensions` (or `edge://extensions` / `brave://extensions`).

@@ -11,9 +11,9 @@ DevLens can be deployed and used in two modes:
  
 ### 2.1 Option A: Installation from GitHub Release `.zip` (Standard User)
 This method requires **no Git, no terminal, and no Python**:
-1. Go to [GitHub Releases](https://github.com/arnab825/DevLens/releases).
-2. Under **Assets**, click to download **`devlens-v0.1.1.zip`**.
-3. Locate the file in your downloads and extract it (right-click ➔ **Extract All...**).
+1. Go to [GitHub Releases](https://github.com/arnab825/DevLens/releases/latest).
+2. Under **Assets**, click to download the release zip: **`devlens-v*.zip`** (e.g. `devlens-v0.1.1.zip`).
+3. Locate the file in your `Downloads` folder and extract it (right-click ➔ **Extract All...**).
 4. Open Google Chrome, Microsoft Edge, Brave, or Opera.
 5. In the URL bar, go to `chrome://extensions` (or `edge://extensions`).
 6. Turn on the **Developer mode** toggle in the top-right corner.
